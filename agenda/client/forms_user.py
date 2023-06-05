@@ -13,7 +13,6 @@ class UserForm(UserCreationForm):
     birth_date = forms.DateField(widget=DateInput())
     email = forms.EmailField()
     username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
         model = User
@@ -23,5 +22,6 @@ class UserForm(UserCreationForm):
             "birth_date",
             "email",
             "username",
-            "password"
+            "password1",
+            "password2"
         )
