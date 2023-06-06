@@ -8,7 +8,6 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=150)
     birth_date = models.DateField()
     email = models.EmailField()
-    username = models.CharField(max_length=100)
 
     class Meta:
         db_table = "user"

@@ -12,7 +12,6 @@ class UserForm(UserCreationForm):
     last_name = forms.CharField()
     birth_date = forms.DateField(widget=DateInput())
     email = forms.EmailField()
-    username = forms.CharField()
 
     class Meta:
         model = User
