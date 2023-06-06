@@ -1,5 +1,6 @@
 from django.db import models
 from .models_user import User
+from django.urls import reverse
 
 
 class Tasks(models.Model):
@@ -20,3 +21,12 @@ class Tasks(models.Model):
 
     def get_input_date(self):
         return self.birth_date.strftime("%Y-%m-%dT%H:%M")
+
+    def get_date_event(self):
+        return self.task_date.strftime("%Y-%m-%dT%H:%M")
+
+    def get_absolute_url(self):
+        return reverse("tasks:task-update", kwargs={"id": self.id})
+
+    def get_delete_url(self):
+        return reverse("tasks:task-delete", kwargs={"id": self.id})

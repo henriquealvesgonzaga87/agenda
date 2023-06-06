@@ -6,12 +6,12 @@
 
   <form>
     <div class="form-group mt-1">
-      <input class="form-control" type="text" name="name" placeholder="Search by tag...">
+      <input class="form-control" type="text" name="title" placeholder="Search by tag or title...">
     </div>
     <button type="submit" class="btn btn-primary">Search</button>
   </form>
 
-  <a href="{% url 'tasks:task-create' %}">
+  <a href="{% url 'tasks:task-create' user_id=request.user.id %}">
     <button type="button" class="btn btn-success"
             style="float: right; margin-botton: 5px">Add</button>
   </a>
@@ -30,10 +30,14 @@
     <tbody>
       {% for task in task_list %}
         <tr>
-          <td><a href="{{ customer.get_absolute_url }}">{{ customer.get_full_name }}</a></td>
-          <td>{{ customer.get_full_city }}</td>
-          <td>{{ customer.get_full_phone_number }}</td>
-          <td>{{ customer.email }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.tags }}</td>
+          <td>{{ task.description }}</td>
+          <td>{{ task.task_date }}</td>
+          <td>{{ task.active }}</td>
+          <form method="post" action="{{ tasks.get_absolute_url }}">{% csrf_token %}
+            <td><button type="submit" class="btn btn-primary">Update</button></td>
+          </form>
           <form method="post" action="{{ customer.get_delete_url }}">{% csrf_token %}
             <td><button type="submit" class="btn btn-danger">Delete</button></td>
           </form>
