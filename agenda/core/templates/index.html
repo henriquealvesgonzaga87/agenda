@@ -3,7 +3,7 @@
 {% block content %}
     <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-            <a class="nav-link" href="{% url 'tasks:task-list' %}">See Tasks</a>
+            <a class="nav-link" href="{% url 'index' %}">See Tasks</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{% url 'tasks:task-create' user_id=request.user.id %}">Create Task</a>

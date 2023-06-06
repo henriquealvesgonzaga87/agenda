@@ -25,6 +25,6 @@ urlpatterns = [
     path("", login_required(TemplateView.as_view(template_name="index.html")), name="index"),
     path("accounts/login/", views.login, name="login"),
     path("logout/", views.logout, name="logout"),
-    path("login/submit", views.submit_login, name="submit_login"),
+    path("accounts/login/submit", views.submit_login, name="submit_login"),
     path("user/", include("client.urls")),
 ]

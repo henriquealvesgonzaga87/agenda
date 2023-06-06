@@ -1,5 +1,5 @@
 from urllib import request
-from django.shortcuts import reverse
+from django.shortcuts import redirect
 from django.views.generic import CreateView
 from .forms_user import UserForm
 from .forms_tasks import TaskForm
@@ -7,6 +7,7 @@ from .model_tasks import Tasks
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from .models_user import UserProfile
+from django.contrib import messages
 
 
 class UserCreateView(CreateView):
@@ -29,12 +30,9 @@ class UserCreateView(CreateView):
         user.save()
 
         UserProfile.objects.create(user=user, first_name=first_name, last_name=last_name, birth_date=birth_date,
-                                   email=email, username=username)
+                                   email=email)
 
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("agenda:index")
+        return redirect("index")
 
 
 class TaskCreateView(CreateView):
@@ -43,7 +41,14 @@ class TaskCreateView(CreateView):
     success_url = reverse_lazy("tasks:task-create")
 
     def form_valid(self, form):
-        task = form.save(commit=False)
-        task.user_id = User.objects.get(id=self.request.user.id)
-        task.save()
-        return super().form_valid(form)
+        try:
+            task = form.save(commit=False)
+            task.user_id = User.objects.get(id=self.request.user.id)
+        except Exception:
+            messages.error("Error to save your task.")
+            print(Exception)
+        else:
+            task.save()
+        return redirect("index")
+
+
