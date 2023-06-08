@@ -1,15 +1,16 @@
 from urllib import request
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 from .forms_user import UserForm
 from .forms_tasks import TaskForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User
 from .models_user import UserProfile
 from django.contrib import messages
 from django.db.models import Q
 from .model_tasks import Tasks
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404
 
 
 class UserCreateView(CreateView):
@@ -56,7 +57,7 @@ class TaskCreateView(CreateView):
 
 class TaskReadView(LoginRequiredMixin, ListView):
     template_name = "client/task_list.html"
-    paginate_by = 1
+    paginate_by = 10
     model = Tasks
 
     def get_queryset(self):
@@ -64,19 +65,25 @@ class TaskReadView(LoginRequiredMixin, ListView):
         user = self.request.user
         if title:
             object_list = self.model.objects.filter(
-                Q(title__incontains=title) | Q(tags__incontains=title)
+                Q(title__icontains=title) | Q(tags__icontains=title)
             )
         else:
             object_list = self.model.objects.filter(user_id=user)
-        return object_list
+        return object_list.order_by('date_creation_task')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(** kwargs)
-        context['task_list'] = self.get_queryset()
-        return context
 
-    #def list_tasks(self, request):
-        #user = request.user
-        #event = Tasks.objects.all()
-        #tasks = {'tasks': event}
-        #return render(request, 'client/task_list.html', tasks)
+class TaskUpdateView(UpdateView):
+    template_name = "client/task.html"
+    model = Tasks
+    form_class = TaskForm
+
+    def get_object(self):
+        task_id = self.kwargs.get("task_id")
+        user_id = self.kwargs.get("user_id")
+        return get_object_or_404(Tasks, user_id=user_id, id=task_id)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("tasks:task-list")

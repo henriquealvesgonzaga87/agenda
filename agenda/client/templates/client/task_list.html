@@ -23,22 +23,17 @@
         <th>Tag</th>
         <th>Description</th>
         <th>Date</th>
-        <th>Active</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
-      {% for task in task_list %}
+      {% for task in page_obj %}
         <tr>
-          <td>{{ task.title }}</td>
+          <td><a href="{% url 'tasks:task-update' user_id=user.id task_id=task.id %}">{{ task.title }}</a></td>
           <td>{{ task.tags }}</td>
           <td>{{ task.description }}</td>
           <td>{{ task.task_date }}</td>
-          <td>{{ task.active }}</td>
-          <form method="post" action="{{ tasks.get_absolute_url }}">{% csrf_token %}
-            <td><button type="submit" class="btn btn-primary">Update</button></td>
-          </form>
-          <form method="post" action="{{ customer.get_delete_url }}">{% csrf_token %}
+          <form method="post" action="{{ tasks.get_delete_url }}">{% csrf_token %}
             <td><button type="submit" class="btn btn-danger">Delete</button></td>
           </form>
         </tr>

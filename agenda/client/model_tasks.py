@@ -1,5 +1,5 @@
 from django.db import models
-from .models_user import User
+from .models_user import UserProfile, User
 from django.urls import reverse
 
 
@@ -26,7 +26,9 @@ class Tasks(models.Model):
         return self.task_date.strftime("%Y-%m-%dT%H:%M")
 
     def get_absolute_url(self):
-        return reverse("tasks:task-update", kwargs={"id": self.id})
+        user_id = self.user_id
+        task_id = self.id
+        return reverse("tasks:task-update", kwargs={"user_id": user_id, "task_id": task_id})
 
     def get_delete_url(self):
         return reverse("tasks:task-delete", kwargs={"id": self.id})
