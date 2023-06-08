@@ -1,6 +1,6 @@
 from urllib import request
 from django.shortcuts import redirect, render
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from .forms_user import UserForm
 from .forms_tasks import TaskForm
 from django.urls import reverse_lazy, reverse
@@ -76,6 +76,7 @@ class TaskUpdateView(UpdateView):
     template_name = "client/task.html"
     model = Tasks
     form_class = TaskForm
+    success_url = reverse_lazy("tasks:task-create")
 
     def get_object(self):
         task_id = self.kwargs.get("task_id")
@@ -83,7 +84,26 @@ class TaskUpdateView(UpdateView):
         return get_object_or_404(Tasks, user_id=user_id, id=task_id)
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        try:
+            task = form.save(commit=False)
+            task.user_id = User.objects.get(id=self.request.user.id)
+        except Exception:
+            messages.error("Error to save your task.")
+            print(Exception)
+        else:
+            task.save()
+        return redirect("index")
+
+
+class TaskDeleteView(DeleteView):
+    model = Tasks
+    template_name = "tasks:task-list"
+
+    def get_object(self):
+        task_id = self.kwargs.get("task_id")
+        user_id = self.kwargs.get("user_id")
+        return get_object_or_404(Tasks, user_id=user_id, id=task_id)
 
     def get_success_url(self):
-        return reverse("tasks:task-list")
+        user_id = self.kwargs.get("user_id")
+        return reverse_lazy("tasks:task-list", kwargs={"user_id": user_id})
