@@ -2,16 +2,15 @@ from django import forms
 from .model_tasks import Tasks
 
 
-class DateInput(forms.DateInput):
-    input_type = "date"
+class DateTimeInput(forms.DateTimeInput):
+    input_type = "date-time"
 
 
 class TaskForm(forms.ModelForm):
     title = forms.CharField()
     tags = forms.CharField()
-    description = forms.CharField()
-    task_date = forms.DateField(widget=DateInput())
-    active = forms.BooleanField()
+    description = forms.CharField(widget=forms.Textarea)
+    task_date = forms.DateTimeField(widget=DateTimeInput())
 
     class Meta:
         model = Tasks
@@ -20,5 +19,4 @@ class TaskForm(forms.ModelForm):
             "tags",
             "description",
             "task_date",
-            "active"
         )
