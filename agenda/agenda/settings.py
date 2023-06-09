@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +27,7 @@ SECRET_KEY = 'django-insecure-6#re1%zwg1p-kh&t18qh=k60u(jjvf^6v-(1xhj60nc4l09#p-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["tasks-manager-henry.herokuapp.com/"]
+ALLOWED_HOSTS = ["tasks-manager-henry.herokuapp.com", '127.0.0.1']
 
 
 # Application definition
@@ -94,9 +93,8 @@ WSGI_APPLICATION = 'agenda.wsgi.application'
 #     }
 # }
 
-DATABASES = {
+DATABASES = {}
 
-}
 DATABASES['default'] = dj_database_url.config()
 
 # Password validation
@@ -134,11 +132,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILE_DIRS =(os.path.join(BASE_DIR, 'static'))
-
-django_heroku.settings(locals())
 
 STATIC_URL = '/static/'
+
+APPEND_SLASH = False
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
