@@ -1,4 +1,3 @@
-from urllib import request
 from django.shortcuts import redirect, render
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from .forms_user import UserForm
